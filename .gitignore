@@ -1,0 +1,50 @@
+# Файлы и каталоги, создаваемые компилятором
+*.o
+*.obj
+*.exe
+*.out
+*.dll
+*.so
+*.dylib
+
+# Каталоги для сборки
+/build/
+/bin/
+/lib/
+/obj/
+/Debug/
+/Release/
+/dist/
+
+# Системные файлы и файлы редакторов
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Файлы IDE и редакторов
+.vscode/
+.idea/
+*.code-workspace
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.ipch
+
+# Логи и временные файлы
+*.log
+*.tmp
+*.swp
+*.bak
+
+# Файлы конфигурации
+*.cache
+*.clangd
+
+# CMake файлы
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Конфигурационные файлы для pkg-config
+*.pc
