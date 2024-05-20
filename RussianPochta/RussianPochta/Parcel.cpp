@@ -4,22 +4,88 @@
 using namespace PostOfficeControl;
 using namespace std;
 
+string Parcel::getSenderName() {
+    return senderName;
+}
+string Parcel::getSenderSurname() {
+    return senderSurname;
+}
+string Parcel::getRecipientName() {
+    return recipientName;
+}
+string Parcel::getRecipientSurname() {
+    return recipientSurname;
+}
+string Parcel::getTrackNumber() {
+    return trackNumber;
+}
+int Parcel::getFrom() {
+    return from;
+}
+int Parcel::getWhere() {
+    return where;
+}
+int Parcel::getWeight() {
+    return weight;
+}
+void Parcel::setSenderName(string SenderName) {
+    senderName = SenderName;
+}
+void Parcel::setSenderSurname(string SenderSurname) {
+    senderSurname = SenderSurname;
+}
+void Parcel::setRecipientName(string RecipientName) {
+    recipientName = RecipientName;
+}
+void Parcel::setRecipientSurname(string RecipientSurname) {
+    recipientSurname = RecipientSurname;
+}
+void Parcel::setTrackNumber(string TrackNumber) {
+    trackNumber = TrackNumber;
+}
+void Parcel::setFrom(int From) {
+    from = From;
+}
+void Parcel::setWhere(int Where) {
+    where = Where;
+}
+void Parcel::setWeight(int Weight) {
+    weight = Weight;
+}
+time_t Parcel::getSentTime() {
+    return sentTime;
+}
+void Parcel::setSentTime(time_t time) {
+    sentTime = time;
+}
+time_t Parcel::getReceiveTime()  {
+    return recieveTime;
+}
+void Parcel::setReceiveTime(time_t time) {
+    recieveTime = time;
+}
+void Parcel::setState(bool State) {
+    state = State;
+}
+bool Parcel::getState() {
+    return state;
+}
 std::istream& operator>>(std::istream& in, Parcel& parcel) {
     int answer;
     parcel.state = false;
     parcel.sentTime = time(nullptr);
     parcel.recieveTime = time(nullptr);
     parcel.trackNumber = to_string((getCountParcel() + 1));
-    cout << "Èìÿ îòïðàâèòåëÿ: ";
+    cout << "ÃˆÃ¬Ã¿ Ã®Ã²Ã¯Ã°Ã Ã¢Ã¨Ã²Ã¥Ã«Ã¿: ";
     in >> parcel.senderName;
-    cout << "Ôàìèëèÿ îòïðàâèòåëÿ: ";
+    cout << "Ã”Ã Ã¬Ã¨Ã«Ã¨Ã¿ Ã®Ã²Ã¯Ã°Ã Ã¢Ã¨Ã²Ã¥Ã«Ã¿: ";
     in >> parcel.senderSurname;
-    cout << "Èìÿ ïîëó÷àòåëÿ: ";
+    cout << "ÃˆÃ¬Ã¿ Ã¯Ã®Ã«Ã³Ã·Ã Ã²Ã¥Ã«Ã¿: ";
     in >> parcel.recipientName;
-    cout << "Ôàìèëèÿ ïîëó÷àòåëÿ: ";
+    cout << "Ã”Ã Ã¬Ã¨Ã«Ã¨Ã¿ Ã¯Ã®Ã«Ã³Ã·Ã Ã²Ã¥Ã«Ã¿: ";
     in >> parcel.recipientSurname;
-    cout << "Îòêóäà: " << endl;
-    //òóò ïîòîì ñìîòðÿ ïî ñèòóàöèè äîáàâëþ...
+    cout << "ÃŽÃ²ÃªÃ³Ã¤Ã : " << endl;
+    //Ã²Ã³Ã² Ã¯Ã®Ã²Ã®Ã¬ Ã±Ã¬Ã®Ã²Ã°Ã¿ Ã¯Ã® Ã±Ã¨Ã²Ã³Ã Ã¶Ã¨Ã¨ Ã¤Ã®Ã¡Ã Ã¢Ã«Ã¾...
 }
 
 std::ostream& operator<<(std::ostream& out, const Parcel& parcel) {
@@ -31,14 +97,14 @@ std::ostream& operator<<(std::ostream& out, const Parcel& parcel) {
     char buffer2[80];
     std::strftime(buffer1, 80, "%Y-%m-%d %H:%M:%S", &timeinfo1);
     std::strftime(buffer2, 80, "%Y-%m-%d %H:%M:%S", &timeinfo2);
-    out << "Òðåê-íîìåð: " << parcel.trackNumber << std::endl;
-    out << "Îòïðàâèòåëü: " << parcel.senderName << " " << parcel.senderSurname << std::endl;
-    out << "Ïîëó÷àòåëü: " << parcel.recipientName << " " << parcel.recipientSurname << std::endl;
-    out << "Îòïðàâëåíî èç îòäåëåíèÿ: " << parcel.from << std::endl;
-    out << "Àäðåñ äîñòàâêè: " << parcel.where << std::endl;
-    out << "Âåñ: " << parcel.weight << " êèëîãðàìì" << std::endl;
-    out << "Ñòàòóñ: " << (parcel.state ? "Â ïóòè" : "Äîñòàâëåíî") << std::endl;
-    out << "Âðåìÿ îòïðàâêè: " << buffer1 << endl;
-    out << "Âðåìÿ ïðèáûòèÿ: " << buffer2 << "\n" << endl;
+    out << "Ã’Ã°Ã¥Ãª-Ã­Ã®Ã¬Ã¥Ã°: " << parcel.trackNumber << std::endl;
+    out << "ÃŽÃ²Ã¯Ã°Ã Ã¢Ã¨Ã²Ã¥Ã«Ã¼: " << parcel.senderName << " " << parcel.senderSurname << std::endl;
+    out << "ÃÃ®Ã«Ã³Ã·Ã Ã²Ã¥Ã«Ã¼: " << parcel.recipientName << " " << parcel.recipientSurname << std::endl;
+    out << "ÃŽÃ²Ã¯Ã°Ã Ã¢Ã«Ã¥Ã­Ã® Ã¨Ã§ Ã®Ã²Ã¤Ã¥Ã«Ã¥Ã­Ã¨Ã¿: " << parcel.from << std::endl;
+    out << "Ã€Ã¤Ã°Ã¥Ã± Ã¤Ã®Ã±Ã²Ã Ã¢ÃªÃ¨: " << parcel.where << std::endl;
+    out << "Ã‚Ã¥Ã±: " << parcel.weight << " ÃªÃ¨Ã«Ã®Ã£Ã°Ã Ã¬Ã¬" << std::endl;
+    out << "Ã‘Ã²Ã Ã²Ã³Ã±: " << (parcel.state ? "Ã‚ Ã¯Ã³Ã²Ã¨" : "Ã„Ã®Ã±Ã²Ã Ã¢Ã«Ã¥Ã­Ã®") << std::endl;
+    out << "Ã‚Ã°Ã¥Ã¬Ã¿ Ã®Ã²Ã¯Ã°Ã Ã¢ÃªÃ¨: " << buffer1 << endl;
+    out << "Ã‚Ã°Ã¥Ã¬Ã¿ Ã¯Ã°Ã¨Ã¡Ã»Ã²Ã¨Ã¿: " << buffer2 << "\n" << endl;
     return out;
 }
