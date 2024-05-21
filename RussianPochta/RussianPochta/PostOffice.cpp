@@ -33,3 +33,28 @@ std::ostream& operator<<(std::ostream& out, const PostOffice& office) {
     std::cout << "Координата y: " << office.coordinateY << "\n" << std::endl;
     return out;
 }
+
+int PostOffice::getCoordinateX()  {
+    return coordinateX;
+}
+int PostOffice::getIndex() {
+    return index;
+}
+int PostOffice::getCoordinateY()  {
+    return coordinateY;
+}
+string PostOffice::getNameOffice() {
+    return name;
+}
+void PostOffice::setIndex(int Index) {
+    index = Index;
+}
+void PostOffice::setCoordinateX(int X) {
+    coordinateX = X;
+}
+void PostOffice::setCoordinateY(int Y) {
+    coordinateY = Y;
+}
+void PostOffice::setNameOffice(string Name) {
+    name = Name;
+}
