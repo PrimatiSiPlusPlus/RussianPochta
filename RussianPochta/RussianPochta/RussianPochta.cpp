@@ -25,7 +25,7 @@ int main() {
     }
     if (number == 1) {
         while (true) {
-           // checkStatusParcels();
+            checkStatusParcels();
             std::cout << "/------------------------------\\" << std::endl;
             std::cout << "|         Почта России         |" << std::endl;
             std::cout << "|------------------------------|" << std::endl;
@@ -122,6 +122,7 @@ int main() {
         }
     }
     else if (number == 3) {
+        checkStatusParcels();
         cout << "У нас всё работает, можете не проверять, ставьте сразу автомат :)";
         return 0;
     }

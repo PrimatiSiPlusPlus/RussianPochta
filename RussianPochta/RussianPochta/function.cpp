@@ -115,12 +115,18 @@ void PostOfficeControl::deliveryParcel() {
     string deliveryParcel;
     int countFound = 0;
     int number;
+    string name;
+    string surname;
     vector<Parcel> parcel = readParcel();
     cout << "Введите трек-номер посылки: ";
     cout << "\n";
     cin >> deliveryParcel;
+    cout << "Введите ваше имя и фамилию:";
+    cin >> name;
+    cout << endl;
+    cin >> surname;
     for (int i = 0; i < getCountParcel(); i++) {
-        if (!(parcel[i].getTrackNumber()).compare(deliveryParcel) && (parcel[i].getState() == 0)){
+        if (!(parcel[i].getTrackNumber()).compare(deliveryParcel) && (parcel[i].getState() == 0) && (name == parcel[i].getRecipientName()) && surname == parcel[i].getRecipientSurname()) {
             cout << "Получена посылка: " << parcel[i];
             number = i;
             countFound++;
@@ -131,7 +137,7 @@ void PostOfficeControl::deliveryParcel() {
         }
     }
     if (countFound == 0)
-        cout << "Нет посылки с этим трек-номером" << endl;
+        cout << "Нет посылки с этим трек-номером, либо вы пытаетесь получить чужую посылку" << endl;
     else if (countFound == -1) {
         cout << "Посылка с этим трек-номером в пути" << endl;
     }
@@ -248,6 +254,21 @@ void PostOfficeControl::progressTime() {
 }
 
 void PostOfficeControl::checkStatusParcels() {
+    ifstream file("fileParcel.txt");
+    if (!file.is_open()) {
+        file.close();
+        ofstream file("fileParcel.txt");
+        file << 0;
+        file.close();
+    }
+    ifstream file2("filePostOffice.txt");
+    if (!file2.is_open()) {
+        file2.close();
+        ofstream file2("filePostOffice.txt");
+        file2 << 0;
+        file2.close();
+
+    }
     vector<Parcel> parcel = readParcel();
     time_t currentTime = time(nullptr);
     for (int i = 0; i < getCountParcel(); i++) {
@@ -338,7 +359,7 @@ vector<PostOffice> PostOfficeControl::readPostOffice() {
     int y;
     std::ifstream file("filePostOffice.txt");
     if (!file.is_open()) {
-        std::cout << "Error: could not open file.txt for loading" << std::endl;
+        std::cout << "Error: could not open filePostOffice.txt for loading" << std::endl;
         return {};
     }
     file >> countPostOffice;
