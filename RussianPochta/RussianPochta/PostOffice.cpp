@@ -46,7 +46,6 @@ std::istream& operator>>(std::istream& in, PostOffice& office) {
     std::uniform_int_distribution<int> distribution(100000, 999999); // Генерируем числа от 0 до максимального значения long long
     // Генерируем случайное число
     int randomNumber = distribution(gen);
-
     office.index = randomNumber;
     return in;
 }
