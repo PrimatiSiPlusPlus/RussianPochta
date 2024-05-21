@@ -6,13 +6,146 @@
 #include <sstream>
 using namespace std;
 using namespace PostOfficeControl;
+int PostOfficeControl::inputInteger() {
+    std::string input;
+    int number;
+    while (true) {
+        cin >> input;
+
+        std::istringstream iss(input);
+        if (iss >> number && iss.eof()) {
+            // РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ СѓСЃРїРµС€РЅРѕ, РІС‹С…РѕРґРёРј РёР· С†РёРєР»Р°
+            break;
+        }
+        else {
+            std::cout << "РћС€РёР±РєР°! РџРѕР¶Р°Р»СѓР№СЃС‚Р°, РІРІРµРґРёС‚Рµ РєРѕСЂСЂРµРєС‚РЅРѕРµ С‡РёСЃР»Рѕ." << std::endl;
+        }
+    }
+
+    return number;
+}
+
+void PostOfficeControl::saveParcel(vector<Parcel> arr, const int& n) {
+    ofstream file("fileParcel.txt");
+    if (!file.is_open()) {
+        std::cout << "Error: could not open fileParcel.txt for saving" << std::endl;
+        return;
+    }
+    file << n << std::endl;
+    for (int i = 0; i < n; ++i) {
+        file << arr[i].getTrackNumber() <<" "<< arr[i].getSenderName() <<
+            " " << arr[i].getSenderSurname() << " " << arr[i].getRecipientName() <<
+            " " << arr[i].getRecipientSurname() << " " << arr[i].getFrom() << " " << arr[i].getWhere() <<
+            " " << arr[i].getWeight() << " " << arr[i].getState() << " " << arr[i].getSentTime() << " " << arr[i].getReceiveTime() << std::endl;
+    }
+    file.close();
+};
+
+vector<Parcel> PostOfficeControl::readParcel() {
+    int countParcel;
+    string senderName;
+    string senderSurname;
+    string recipientName;
+    string recipientSurname;
+    string trackNumber;
+    int from;
+    int where;
+    int weight;
+    bool state;
+    time_t sentTime;
+    time_t receiveTime;
+    ifstream file("fileParcel.txt");
+    if (!file.is_open()) {
+        cout << "Error: could not open fileParcel.txt for loading" << endl;
+        return {};
+    }
+    file >> countParcel;
+    vector<Parcel> arrayParcel(countParcel);
+    for (int i = 0; i < countParcel; ++i) {
+        file >> trackNumber >> senderName>> senderSurname >> recipientName >> recipientSurname >> from >> where >> weight >> state >> sentTime >> receiveTime;
+        arrayParcel[i].setTrackNumber(trackNumber);
+        arrayParcel[i].setRecipientName(recipientName);
+        arrayParcel[i].setRecipientSurname(recipientSurname);
+        arrayParcel[i].setSenderName(senderName);
+        arrayParcel[i].setSenderSurname(senderSurname);
+        arrayParcel[i].setFrom(from);
+        arrayParcel[i].setWhere(where);
+        arrayParcel[i].setWeight(weight);
+        arrayParcel[i].setState(state);
+        arrayParcel[i].setSentTime(sentTime);
+        arrayParcel[i].setReceiveTime(receiveTime);
+    }
+    file.close();
+    return arrayParcel;
+}
+
+int PostOfficeControl::getCountParcel() {
+    int n = 0;
+    ifstream file("fileParcel.txt");
+    if (!file.is_open()) {
+        std::cout << "Error: could not open file.txt for loading" << std::endl;
+        return n;
+    }
+    file >> n;
+    file.close();
+    return n;
+}
+
+void PostOfficeControl::findParcel() {
+    vector<Parcel> parcel = readParcel();
+    string track;
+    int countFound = 0;
+    cout << "Р’РІРµРґРёС‚Рµ С‚СЂРµРє-РЅРѕРјРµСЂ РїРѕСЃС‹Р»РєРё: ";
+    cin >> track;
+    cout << "\n";
+    for (int i = 0; i < getCountParcel(); i++) {
+        if (!(parcel[i].getTrackNumber()).compare(track)) {
+            cout << parcel[i];
+            countFound++;
+            break;
+        }
+    }
+    if (countFound == 0)
+        cout << "РќРµС‚ РїРѕСЃС‹Р»РєРё СЃ СЌС‚РёРј С‚СЂРµРє-РЅРѕРјРµСЂРѕРј" << endl;
+
+}
+
+void PostOfficeControl::deliveryParcel() {
+    string deliveryParcel;
+    int countFound = 0;
+    int number;
+    vector<Parcel> parcel = readParcel();
+    cout << "Р’РІРµРґРёС‚Рµ С‚СЂРµРє-РЅРѕРјРµСЂ РїРѕСЃС‹Р»РєРё: ";
+    cout << "\n";
+    cin >> deliveryParcel;
+    for (int i = 0; i < getCountParcel(); i++) {
+        if (!(parcel[i].getTrackNumber()).compare(deliveryParcel) && (parcel[i].getState() == 0)){
+            cout << "РџРѕР»СѓС‡РµРЅР° РїРѕСЃС‹Р»РєР°: " << parcel[i];
+            number = i;
+            countFound++;
+            break;
+        }
+        else if (!(parcel[i].getTrackNumber()).compare(deliveryParcel) && (parcel[i].getState() == 1)) {
+            countFound--;
+        }
+    }
+    if (countFound == 0)
+        cout << "РќРµС‚ РїРѕСЃС‹Р»РєРё СЃ СЌС‚РёРј С‚СЂРµРє-РЅРѕРјРµСЂРѕРј" << endl;
+    else if (countFound == -1) {
+        cout << "РџРѕСЃС‹Р»РєР° СЃ СЌС‚РёРј С‚СЂРµРє-РЅРѕРјРµСЂРѕРј РІ РїСѓС‚Рё" << endl;
+    }
+    else {
+        parcel.erase(parcel.begin() + number);
+        saveParcel(parcel, getCountParcel() - 1);
+    }
+}
 
 time_t PostOfficeControl::timeLocation(PostOffice& sender, PostOffice& reciever) {
 
     double distance = sqrt(pow(sender.getCoordinateX() - reciever.getCoordinateX(), 2) +
         pow(sender.getCoordinateY() - reciever.getCoordinateY(), 2));
 
-    double speed = 60.0; // км/ч
+    double speed = 60.0; // ГЄГ¬/Г·
     double hoursInDay = 24.0;
 
     double travelTime = distance / speed;
@@ -28,19 +161,19 @@ void PostOfficeControl::rewindTime() {
     vector<Parcel> parcels = readParcel();
 
     if (parcels.empty()) {
-        cout << "Нет посылок для отслеживания." << endl;
+        cout << "ГЌГҐГІ ГЇГ®Г±Г»Г«Г®ГЄ Г¤Г«Гї Г®ГІГ±Г«ГҐГ¦ГЁГўГ Г­ГЁГї." << endl;
         return;
     }
 
     int timeToAdd;
 
-    cout << "Введите количество времени для перемотки вперед (в минутах): ";
+    cout << "Г‚ГўГҐГ¤ГЁГІГҐ ГЄГ®Г«ГЁГ·ГҐГ±ГІГўГ® ГўГ°ГҐГ¬ГҐГ­ГЁ Г¤Г«Гї ГЇГҐГ°ГҐГ¬Г®ГІГЄГЁ ГўГЇГҐГ°ГҐГ¤ (Гў Г¬ГЁГ­ГіГІГ Гµ): ";
     timeToAdd = inputInteger();
 
-    // Получаем текущее время
+    // ГЏГ®Г«ГіГ·Г ГҐГ¬ ГІГҐГЄГіГ№ГҐГҐ ГўГ°ГҐГ¬Гї
     time_t currentTime = time(nullptr);
 
-    // Перематываем время для каждой посылки
+    // ГЏГҐГ°ГҐГ¬Г ГІГ»ГўГ ГҐГ¬ ГўГ°ГҐГ¬Гї Г¤Г«Гї ГЄГ Г¦Г¤Г®Г© ГЇГ®Г±Г»Г«ГЄГЁ
     for (int i = 0; i < parcels.size(); ++i) {
         if ((parcels[i].getReceiveTime() - timeToAdd * 60) <= currentTime) {
             parcels[i].setReceiveTime(currentTime);
@@ -51,14 +184,14 @@ void PostOfficeControl::rewindTime() {
         }
     }
     saveParcel(parcels, getCountParcel());
-    cout << "Время успешно перемотано вперед для всех посылок." << endl;
+    cout << "Г‚Г°ГҐГ¬Гї ГіГ±ГЇГҐГёГ­Г® ГЇГҐГ°ГҐГ¬Г®ГІГ Г­Г® ГўГЇГҐГ°ГҐГ¤ Г¤Г«Гї ГўГ±ГҐГµ ГЇГ®Г±Г»Г«Г®ГЄ." << endl;
 }
 
 void PostOfficeControl::sendParcel() {
     vector<Parcel> parcels = readParcel();
     vector<PostOffice> offices = readPostOffice();
 
-    // Создаем новую посылку
+    // Г‘Г®Г§Г¤Г ГҐГ¬ Г­Г®ГўГіГѕ ГЇГ®Г±Г»Г«ГЄГі
     Parcel newParcel;
     cin >> newParcel;
 
@@ -73,24 +206,24 @@ void PostOfficeControl::sendParcel() {
         }
 
     }
-    // Рассчитываем время отправления и доставки
+    // ГђГ Г±Г±Г·ГЁГІГ»ГўГ ГҐГ¬ ГўГ°ГҐГ¬Гї Г®ГІГЇГ°Г ГўГ«ГҐГ­ГЁГї ГЁ Г¤Г®Г±ГІГ ГўГЄГЁ
     time_t currentTime = time(nullptr);
     newParcel.setSentTime(currentTime);
-    newParcel.setReceiveTime(timeLocation(offices[from], offices[where])); // тут хз че с индексами
+    newParcel.setReceiveTime(timeLocation(offices[from], offices[where])); // ГІГіГІ ГµГ§ Г·ГҐ Г± ГЁГ­Г¤ГҐГЄГ±Г Г¬ГЁ
 
-    // Обновляем информацию о посылке и сохраняем изменения
-    newParcel.setState(true); //true - едет, false - не едет
-    parcels.push_back(newParcel); // Добавляем новую посылку в вектор
+    // ГЋГЎГ­Г®ГўГ«ГїГҐГ¬ ГЁГ­ГґГ®Г°Г¬Г Г¶ГЁГѕ Г® ГЇГ®Г±Г»Г«ГЄГҐ ГЁ Г±Г®ГµГ°Г Г­ГїГҐГ¬ ГЁГ§Г¬ГҐГ­ГҐГ­ГЁГї
+    newParcel.setState(true); //true - ГҐГ¤ГҐГІ, false - Г­ГҐ ГҐГ¤ГҐГІ
+    parcels.push_back(newParcel); // Г„Г®ГЎГ ГўГ«ГїГҐГ¬ Г­Г®ГўГіГѕ ГЇГ®Г±Г»Г«ГЄГі Гў ГўГҐГЄГІГ®Г°
     saveParcel(parcels, getCountParcel() + 1);
 
-    cout << "Посылка отправлена!" << endl;
-    cout << "Трек-Номер: " << newParcel.getTrackNumber() << endl;
+    cout << "ГЏГ®Г±Г»Г«ГЄГ  Г®ГІГЇГ°Г ГўГ«ГҐГ­Г !" << endl;
+    cout << "Г’Г°ГҐГЄ-ГЌГ®Г¬ГҐГ°: " << newParcel.getTrackNumber() << endl;
 }
 
 void PostOfficeControl::progressTime() {
     vector<Parcel> parcel = readParcel();
     string trackNumber;
-    cout << "Введите трек-номер посылки чтобы узнать статус: ";
+    cout << "Г‚ГўГҐГ¤ГЁГІГҐ ГІГ°ГҐГЄ-Г­Г®Г¬ГҐГ° ГЇГ®Г±Г»Г«ГЄГЁ Г·ГІГ®ГЎГ» ГіГ§Г­Г ГІГј Г±ГІГ ГІГіГ±: ";
     cin >> trackNumber;
     int foundParcel = -1;
     time_t currentTime = time(nullptr);
@@ -102,17 +235,17 @@ void PostOfficeControl::progressTime() {
 
     }
     if (foundParcel == -1) {
-        cout << " Посылка не найдена " << endl;
+        cout << " ГЏГ®Г±Г»Г«ГЄГ  Г­ГҐ Г­Г Г©Г¤ГҐГ­Г  " << endl;
     }
     else if (currentTime >= parcel[foundParcel].getReceiveTime()) {
         parcel[foundParcel].setState(0);
-        cout << "Посылка прибыла" << endl;
+        cout << "ГЏГ®Г±Г»Г«ГЄГ  ГЇГ°ГЁГЎГ»Г«Г " << endl;
     }
     else {
         double curentTimeDouble = currentTime * 1.0;
         double sentTime = parcel[foundParcel].getSentTime() * 1.0;
         double receiveTime = parcel[foundParcel].getReceiveTime() * 1.0;
-        cout << "Посылка доставлена на " << (curentTimeDouble - sentTime) / (receiveTime - sentTime) * 100 << "% " << endl;;
+        cout << "ГЏГ®Г±Г»Г«ГЄГ  Г¤Г®Г±ГІГ ГўГ«ГҐГ­Г  Г­Г  " << (curentTimeDouble - sentTime) / (receiveTime - sentTime) * 100 << "% " << endl;;
     }
 }
 
@@ -130,12 +263,12 @@ void PostOfficeControl::checkStatusParcels() {
 void PostOfficeControl::print() {
     vector<PostOffice> office = readPostOffice();
     vector <Parcel> parcel = readParcel();
-    cout << "Отделения:" << endl;
+    cout << "ГЋГІГ¤ГҐГ«ГҐГ­ГЁГї:" << endl;
     for (int i = 0; i < getCountPostOffice(); i++) {
         cout << i + 1 << ". " << office[i];
     }
     if (getCountParcel() != 0) {
-        cout << "\n" << "Посылки:" << endl;
+        cout << "\n" << "ГЏГ®Г±Г»Г«ГЄГЁ:" << endl;
     }
     for (int i = 0; i < getCountParcel(); i++) {
         cout << i + 1 << ". " << "\n" << parcel[i];
