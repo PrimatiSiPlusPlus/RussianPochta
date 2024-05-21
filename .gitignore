@@ -24,10 +24,6 @@ desktop.ini
 # Файлы IDE и редакторов
 .vscode/
 .idea/
-*.code-workspace
-*.vcxproj
-*.vcxproj.filters
-*.vcxproj.user
 *.ipch
 
 # Логи и временные файлы
