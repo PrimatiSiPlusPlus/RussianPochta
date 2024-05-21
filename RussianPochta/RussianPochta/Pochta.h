@@ -27,7 +27,7 @@ public:
 	time_t getSentTime();
 	time_t getReceiveTime();
 	bool getState();
-
+	                               //vika
 
 	void setSenderName(std::string SenderName);
 	void setSenderSurname(std::string SenderSurname);
@@ -45,7 +45,6 @@ public:
 	friend std::ostream& operator<<(std::ostream& out, const Parcel& parcel);
 };
 class PostOffice {
-	//std::list<Parcels> listParcels;
 	int index;
 	std::string name;
 	int coordinateX;
@@ -55,7 +54,8 @@ public:
 	std::string getNameOffice();
 	int getCoordinateX();
 	int getCoordinateY();
-	void setIndex(int Index);
+
+	void setIndex(int Index); //sonya
 	void setCoordinateX(int X);
 	void setCoordinateY(int Y);
 	void setNameOffice(std::string Name);
@@ -67,7 +67,7 @@ public:
 namespace PostOfficeControl {
 	void createPostOffice(const int n); 
 	void removePostOffice();
-	void editPostOffice();
+	void editPostOffice(); //sonya
 	void savePostOffice(std::vector<PostOffice> arr, const int& n);
 	std::vector<PostOffice> readPostOffice();
 	int getCountPostOffice();
@@ -75,14 +75,14 @@ namespace PostOfficeControl {
 	void sendParcel();
 	void findParcel();
 	int getCountParcel();
-	void deliveryParcel();
+	void deliveryParcel(); //vika
 	void checkStatusParcels();
 	std::vector<Parcel> readParcel();
 	void saveParcel(std::vector<Parcel> arr, const int& n);
 
 	time_t timeLocation(PostOffice& sender, PostOffice& reciever);
 	void rewindTime();
-	void progressTime();
+	void progressTime(); //ivan
 	void print();
 	int inputInteger();
 }

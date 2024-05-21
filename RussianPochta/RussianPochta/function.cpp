@@ -6,6 +6,7 @@
 #include <sstream>
 using namespace std;
 using namespace PostOfficeControl;
+
 int PostOfficeControl::inputInteger() {
     std::string input;
     int number;
@@ -145,7 +146,7 @@ time_t PostOfficeControl::timeLocation(PostOffice& sender, PostOffice& reciever)
     double distance = sqrt(pow(sender.getCoordinateX() - reciever.getCoordinateX(), 2) +
         pow(sender.getCoordinateY() - reciever.getCoordinateY(), 2));
 
-    double speed = 60.0; // êì/÷
+    double speed = 60.0; 
     double hoursInDay = 24.0;
 
     double travelTime = distance / speed;
@@ -159,21 +160,18 @@ time_t PostOfficeControl::timeLocation(PostOffice& sender, PostOffice& reciever)
 
 void PostOfficeControl::rewindTime() {
     vector<Parcel> parcels = readParcel();
-
     if (parcels.empty()) {
-        cout << "Íåò ïîñûëîê äëÿ îòñëåæèâàíèÿ." << endl;
+        cout << "Нет посылок для отслеживания." << endl;
         return;
     }
-
     int timeToAdd;
-
-    cout << "Ââåäèòå êîëè÷åñòâî âðåìåíè äëÿ ïåðåìîòêè âïåðåä (â ìèíóòàõ): ";
+    cout << "Введите количество времени для перемотки вперед (в минутах): ";
     timeToAdd = inputInteger();
 
-    // Ïîëó÷àåì òåêóùåå âðåìÿ
+    // Получаем текущее время
     time_t currentTime = time(nullptr);
 
-    // Ïåðåìàòûâàåì âðåìÿ äëÿ êàæäîé ïîñûëêè
+    // Перематываем время для каждой посылки
     for (int i = 0; i < parcels.size(); ++i) {
         if ((parcels[i].getReceiveTime() - timeToAdd * 60) <= currentTime) {
             parcels[i].setReceiveTime(currentTime);
@@ -184,14 +182,14 @@ void PostOfficeControl::rewindTime() {
         }
     }
     saveParcel(parcels, getCountParcel());
-    cout << "Âðåìÿ óñïåøíî ïåðåìîòàíî âïåðåä äëÿ âñåõ ïîñûëîê." << endl;
+    cout << "Время успешно перемотано вперед для всех посылок." << endl;
 }
 
 void PostOfficeControl::sendParcel() {
     vector<Parcel> parcels = readParcel();
     vector<PostOffice> offices = readPostOffice();
 
-    // Ñîçäàåì íîâóþ ïîñûëêó
+    // Создаем новую посылку
     Parcel newParcel;
     cin >> newParcel;
 
@@ -206,24 +204,24 @@ void PostOfficeControl::sendParcel() {
         }
 
     }
-    // Ðàññ÷èòûâàåì âðåìÿ îòïðàâëåíèÿ è äîñòàâêè
+    // Рассчитываем время отправления и доставки
     time_t currentTime = time(nullptr);
     newParcel.setSentTime(currentTime);
-    newParcel.setReceiveTime(timeLocation(offices[from], offices[where])); // òóò õç ÷å ñ èíäåêñàìè
+    newParcel.setReceiveTime(timeLocation(offices[from], offices[where])); // тут хз че с индексами
 
-    // Îáíîâëÿåì èíôîðìàöèþ î ïîñûëêå è ñîõðàíÿåì èçìåíåíèÿ
-    newParcel.setState(true); //true - åäåò, false - íå åäåò
-    parcels.push_back(newParcel); // Äîáàâëÿåì íîâóþ ïîñûëêó â âåêòîð
+    // Обновляем информацию о посылке и сохраняем изменения
+    newParcel.setState(true); //true - едет, false - не едет
+    parcels.push_back(newParcel); // Добавляем новую посылку в вектор
     saveParcel(parcels, getCountParcel() + 1);
 
-    cout << "Ïîñûëêà îòïðàâëåíà!" << endl;
-    cout << "Òðåê-Íîìåð: " << newParcel.getTrackNumber() << endl;
+    cout << "Посылка отправлена!" << endl;
+    cout << "Трек-Номер: " << newParcel.getTrackNumber() << endl;
 }
 
 void PostOfficeControl::progressTime() {
     vector<Parcel> parcel = readParcel();
     string trackNumber;
-    cout << "Ââåäèòå òðåê-íîìåð ïîñûëêè ÷òîáû óçíàòü ñòàòóñ: ";
+    cout << "Введите трек-номер посылки чтобы узнать статус: ";
     cin >> trackNumber;
     int foundParcel = -1;
     time_t currentTime = time(nullptr);
@@ -235,17 +233,17 @@ void PostOfficeControl::progressTime() {
 
     }
     if (foundParcel == -1) {
-        cout << " Ïîñûëêà íå íàéäåíà " << endl;
+        cout << " Посылка не найдена " << endl;
     }
     else if (currentTime >= parcel[foundParcel].getReceiveTime()) {
         parcel[foundParcel].setState(0);
-        cout << "Ïîñûëêà ïðèáûëà" << endl;
+        cout << "Посылка прибыла" << endl;
     }
     else {
         double curentTimeDouble = currentTime * 1.0;
         double sentTime = parcel[foundParcel].getSentTime() * 1.0;
         double receiveTime = parcel[foundParcel].getReceiveTime() * 1.0;
-        cout << "Ïîñûëêà äîñòàâëåíà íà " << (curentTimeDouble - sentTime) / (receiveTime - sentTime) * 100 << "% " << endl;;
+        cout << "Посылка доставлена на " << (curentTimeDouble - sentTime) / (receiveTime - sentTime) * 100 << "% " << endl;;
     }
 }
 
@@ -263,12 +261,12 @@ void PostOfficeControl::checkStatusParcels() {
 void PostOfficeControl::print() {
     vector<PostOffice> office = readPostOffice();
     vector <Parcel> parcel = readParcel();
-    cout << "Îòäåëåíèÿ:" << endl;
+    cout << "Отделения:" << endl;
     for (int i = 0; i < getCountPostOffice(); i++) {
         cout << i + 1 << ". " << office[i];
     }
     if (getCountParcel() != 0) {
-        cout << "\n" << "Ïîñûëêè:" << endl;
+        cout << "\n" << "Посылки:" << endl;
     }
     for (int i = 0; i < getCountParcel(); i++) {
         cout << i + 1 << ". " << "\n" << parcel[i];
@@ -278,23 +276,23 @@ void PostOfficeControl::print() {
 void PostOfficeControl::createPostOffice(const int n) {
     vector<PostOffice> arrayPostOffice = readPostOffice();
     int countPost = getCountPostOffice();
-  vector<PostOffice> arrayPostOfficeNew(n);
+    vector<PostOffice> arrayPostOfficeNew(n);
     for (int i = 0; i < n; i++) {
         cin >> arrayPostOfficeNew[i];
     }
 
-    // Niaiauaao aaa aaoi?a a iaei ,noa?ue ec oaeea e iiaue nicaaiiue
+    // Совмещает два ветора в один ,старый из файла и новый созданный
     arrayPostOffice.insert(arrayPostOffice.end(), arrayPostOfficeNew.begin(), arrayPostOfficeNew.end());
-    savePostOffice(arrayPostOffice,n + countPost);// nio?aiyai ana a oaee
+    savePostOffice(arrayPostOffice, n + countPost);// сохраняем все в файл
 }
 
 void PostOfficeControl::removePostOffice() {
     int deleteOffice;
     vector<PostOffice> postOffice = readPostOffice();
     for (int i = 0; i < getCountPostOffice(); i++) {
-        cout << i+1 <<". " << postOffice[i];
+        cout << i + 1 << ". " << postOffice[i];
     }
-    cout << "Eaeia ioaaeaiea ii?ou au oioeoa oaaeeou? Aaaaeoa iiia? ioaaeaiey: " << endl;
+    cout << "Какое отделение почты вы хотите удалить? Введите номер отделения: " << endl;
     deleteOffice = inputInteger();
     postOffice.erase(postOffice.begin() + deleteOffice - 1);
     savePostOffice(postOffice, getCountPostOffice() - 1);
@@ -305,15 +303,15 @@ void PostOfficeControl::editPostOffice() {
     string newNamePostOffice;
     vector<PostOffice> office = readPostOffice();
     for (int i = 0; i < getCountPostOffice(); i++) {
-        cout << i+1<< ". " << office[i];
+        cout << i + 1 << ". " << office[i];
     }
-    cout << "Eiy o eaeiai ioaaeaiey ii?ou au oioeoa eciaieou? Aaaaeoa iiia? ioaaeaiey: ";
+    cout << "Имя у какого отделения почты вы хотите изменить? Введите номер отделения: ";
     while (true) {
         numberForEdit = inputInteger();
         if (numberForEdit > 0 && numberForEdit <= getCountPostOffice())
             break;
     }
-    cout << "Aaaaeoa iiaia eiy:";
+    cout << "Введите новое имя:";
     cin >> newNamePostOffice;
     office[numberForEdit - 1].setNameOffice(newNamePostOffice);
     savePostOffice(office, getCountPostOffice());
