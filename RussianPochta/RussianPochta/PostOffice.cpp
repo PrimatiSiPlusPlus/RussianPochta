@@ -32,28 +32,29 @@ void PostOffice::setNameOffice(string Name) {
 std::istream& operator>>(std::istream& in, PostOffice& office) {
     int x;
     int y;
-    std::cout << "Город отделения(без пробелов): ";
+    std::cout << "City of the post office (without spaces): ";
     in >> office.name;
-    std::cout << "Координата x: " << std::endl;
+    std::cout << "Coordinate x: ";
     x = inputInteger();
     office.coordinateX = x;
-    std::cout << "Координата y: " << std::endl;
+    std::cout << "Coordinate y: ";
     y = inputInteger();
     office.coordinateY = y;
-    std::random_device rd; // Получаем случайное начальное значение из системы
-    std::mt19937 gen(rd()); // Используем полученное значение для инициализации генератора
-    // Создаем распределение случайных чисел в нужном диапазоне
-    std::uniform_int_distribution<int> distribution(100000, 999999); // Генерируем числа от 0 до максимального значения long long
-    // Генерируем случайное число
+
+    std::random_device rd; // Obtain a random seed from the system
+    std::mt19937 gen(rd()); // Use the seed to initialize the generator
+    // Create a distribution for random numbers in the desired range
+    std::uniform_int_distribution<int> distribution(100000, 999999); // Generate numbers between 100000 and 999999
+    // Generate a random number
     int randomNumber = distribution(gen);
     office.index = randomNumber;
     return in;
 }
 
 std::ostream& operator<<(std::ostream& out, const PostOffice& office) {
-    std::cout << "Индекс: " << office.index << std::endl;
-    std::cout << "Название: " << office.name << std::endl;
-    std::cout << "Координата x: " << office.coordinateX << std::endl;
-    std::cout << "Координата y: " << office.coordinateY << "\n" << std::endl;
+    out << "Index: " << office.index << std::endl;
+    out << "Name: " << office.name << std::endl;
+    out << "Coordinate x: " << office.coordinateX << std::endl;
+    out << "Coordinate y: " << office.coordinateY << "\n" << std::endl;
     return out;
 }

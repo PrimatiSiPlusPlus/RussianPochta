@@ -77,34 +77,34 @@ std::istream& operator>>(std::istream& in, Parcel& parcel) {
     parcel.sentTime = time(nullptr);
     parcel.recieveTime = time(nullptr);
     parcel.trackNumber = to_string((getCountParcel() + 1));
-    cout << "Имя отправителя: ";
+    cout << "Sender's first name: ";
     in >> parcel.senderName;
-    cout << "Фамилия отправителя: ";
+    cout << "Sender's last name: ";
     in >> parcel.senderSurname;
-    cout << "Имя получателя: ";
+    cout << "Recipient's first name: ";
     in >> parcel.recipientName;
-    cout << "Фамилия получателя: ";
+    cout << "Recipient's last name: ";
     in >> parcel.recipientSurname;
-    cout << "Откуда: " << endl;
+    cout << "From: " << endl;
     vector<PostOffice> postOffice = readPostOffice();
     for (int i = 0; i < getCountPostOffice(); i++) {
         cout << i + 1 << ". " << postOffice[i];
     }
     answer = inputInteger();
     parcel.from = postOffice[answer - 1].getIndex();
-    cout << "Куда: " << endl;
+    cout << "To: " << endl;
     for (int i = 0; i < getCountPostOffice(); i++) {
         cout << i + 1 << ". " << postOffice[i];
     }
     int answer2 = answer;
     answer = inputInteger();
     while (answer == answer2) {
-        cout << "Вы уже тута. Попробуйте заново" << endl;
+        cout << "You are already here. Try again" << endl;
         answer = inputInteger();
         cin.clear();
     }
     parcel.where = postOffice[answer - 1].getIndex();
-    cout << "Вес посылки(в килограммах): ";
+    cout << "Parcel weight (in kilograms): ";
     in >> parcel.weight;
     return in;
 }
@@ -118,14 +118,15 @@ std::ostream& operator<<(std::ostream& out, const Parcel& parcel) {
     char buffer2[80];
     std::strftime(buffer1, 80, "%Y-%m-%d %H:%M:%S", &timeinfo1);
     std::strftime(buffer2, 80, "%Y-%m-%d %H:%M:%S", &timeinfo2);
-    out << "Трек-номер: " << parcel.trackNumber << std::endl;
-    out << "Отправитель: " << parcel.senderName << " " << parcel.senderSurname << std::endl;
-    out << "Получатель: " << parcel.recipientName << " " << parcel.recipientSurname << std::endl;
-    out << "Отправлено из отделения: " << parcel.from << std::endl;
-    out << "Адрес доставки: " << parcel.where << std::endl;
-    out << "Вес: " << parcel.weight << " килограмм" << std::endl;
-    out << "Статус: " << (parcel.state ? "В пути" : "Доставлено") << std::endl;
-    out << "Время отправки: " << buffer1 << endl;
-    out << "Время прибытия: " << buffer2 << "\n" << endl;
+    out << "Tracking number: " << parcel.trackNumber << std::endl;
+    out << "Sender: " << parcel.senderName << " " << parcel.senderSurname << std::endl;
+    out << "Recipient: " << parcel.recipientName << " " << parcel.recipientSurname << std::endl;
+    out << "Sent from office: " << parcel.from << std::endl;
+    out << "Delivery address: " << parcel.where << std::endl;
+    out << "Weight: " << parcel.weight << " kilograms" << std::endl;
+    out << "Status: " << (parcel.state ? "In transit" : "Delivered") << std::endl;
+    out << "Sent time: " << buffer1 << endl;
+    out << "Arrival time: " << buffer2 << "\n" << endl;
     return out;
 }
+

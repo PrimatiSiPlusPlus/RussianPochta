@@ -1,52 +1,55 @@
 ﻿#include <iostream>
 #include <sstream>
 #include <cctype>
+#include <vector>
+#include <locale>
 #include "Pochta.h"
+
 using namespace PostOfficeControl;
 using namespace std;
 
 int main() {
-    setlocale(LC_ALL, "Russian");
-    system("chcp 1251");
-    vector<Parcel> parcelss;
-    vector<PostOffice> office;
+    vector<Parcel> parcels;
+    vector<PostOffice> offices;
     int number;
-    cout << "1. Админ" << endl;
-    cout << "2. Пользователь" << endl;
-    cout << "3. Алла Владимировна" << endl;
-    cout << "Кто вы?" << endl;
+
+    cout << "1. Admin" << endl;
+    cout << "2. User" << endl;
+    cout << "3. Alla Vladimirovna" << endl;
+    cout << "Who are you?" << endl;
+
     while (true) {
         number = inputInteger();
         if (number <= 0 || number > 3) {
-            cout << "Вы хотите найти какой то секретный пункт? Выберите пожалуйста из предложенных" << endl;
+            cout << "Are you trying to find a secret option? Please choose from the given options." << endl;
             continue;
         }
         break;
     }
-    if (number == 1) {
+
+    if (number == 1) { // Admin
         while (true) {
             checkStatusParcels();
-            std::cout << "/------------------------------\\" << std::endl;
-            std::cout << "|         Почта России         |" << std::endl;
-            std::cout << "|------------------------------|" << std::endl;
-            std::cout << "| 1. Создать отделение почты   |" << std::endl;
-            std::cout << "| 2. Удалить отделение почты   |" << std::endl;
-            std::cout << "| 3. Изменить отделение почты  |" << std::endl;
-            std::cout << "| 4. Отправить посылку         |" << std::endl;
-            std::cout << "| 5. Вывод                     |" << std::endl;
-            std::cout << "| 6. Найти посылку             |" << std::endl;
-            std::cout << "| 7. Получить посылку          |" << std::endl;
-            std::cout << "| 8. Перемотать время          |" << std::endl;
-            std::cout << "| 9. Статус посылок            |" << std::endl;
-            std::cout << "| 10. Выйти из программы       |" << std::endl;
-            std::cout << "\\------------------------------/" << std::endl;
+            cout << "/------------------------------\\" << endl;
+            cout << "|        Russian Post          |" << endl;
+            cout << "|------------------------------|" << endl;
+            cout << "| 1. Create a post office      |" << endl;
+            cout << "| 2. Delete a post office      |" << endl;
+            cout << "| 3. Edit a post office        |" << endl;
+            cout << "| 4. Send a parcel             |" << endl;
+            cout << "| 5. Display                   |" << endl;
+            cout << "| 6. Find a parcel             |" << endl;
+            cout << "| 7. Receive a parcel          |" << endl;
+            cout << "| 8. Fast forward time         |" << endl;
+            cout << "| 9. Parcel status             |" << endl;
+            cout << "| 10. Exit                     |" << endl;
+            cout << "\\------------------------------/" << endl;
             int choice;
-            std::string input;
-            int n;
             choice = inputInteger();
             switch (choice) {
             case 1:
-                cout << "Сколько отделений вы хотите создать: ";
+                cout << "How many post offices do you want to create: ";
+                int n;
                 n = inputInteger();
                 createPostOffice(n);
                 break;
@@ -75,29 +78,27 @@ int main() {
                 progressTime();
                 break;
             case 10:
-                cout << "Выход из программы." << endl;
+                cout << "Exiting the program." << endl;
                 return 0;
             default:
-                cout << "Некорректный выбор. Пожалуйста, выберите действие от 1 до 10." << endl;
+                cout << "Invalid choice. Please select an option between 1 and 10." << endl;
                 break;
             }
         }
     }
-    else if (number == 2) {
+    else if (number == 2) { // User
         while (true) {
             checkStatusParcels();
-            std::cout << "/------------------------------\\" << std::endl;
-            std::cout << "|         Почта России         |" << std::endl;
-            std::cout << "|------------------------------|" << std::endl;
-            std::cout << "| 1. Отправить посылку         |" << std::endl;
-            std::cout << "| 2. Найти посылку             |" << std::endl;
-            std::cout << "| 3. Получить посылку          |" << std::endl;
-            std::cout << "| 4. Статус посылки            |" << std::endl;
-            std::cout << "| 5. Выйти из программы        |" << std::endl;
-            std::cout << "\\------------------------------/" << std::endl;
+            cout << "/------------------------------\\" << endl;
+            cout << "|        Russian Post          |" << endl;
+            cout << "|------------------------------|" << endl;
+            cout << "| 1. Send a parcel             |" << endl;
+            cout << "| 2. Find a parcel             |" << endl;
+            cout << "| 3. Receive a parcel          |" << endl;
+            cout << "| 4. Parcel status             |" << endl;
+            cout << "| 5. Exit                      |" << endl;
+            cout << "\\------------------------------/" << endl;
             int choice;
-            std::string input;
-            int n;
             choice = inputInteger();
             switch (choice) {
             case 1:
@@ -113,18 +114,19 @@ int main() {
                 progressTime();
                 break;
             case 5:
-                cout << "Выход из программы." << endl;
+                cout << "Exiting the program." << endl;
                 return 0;
             default:
-                cout << "Некорректный выбор. Пожалуйста, выберите действие от 1 до 5." << endl;
+                cout << "Invalid choice. Please select an option between 1 and 5." << endl;
                 break;
             }
         }
     }
-    else if (number == 3) {
+    else if (number == 3) { // Alla Vladimirovna
         checkStatusParcels();
-        cout << "У нас всё работает, можете не проверять, ставьте сразу автомат :)";
+        cout << "Everything is working, you don't need to check, just give an automatic grade :)";
         return 0;
     }
+
     return 0;
 }
